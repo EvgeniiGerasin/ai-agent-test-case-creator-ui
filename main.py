@@ -7,18 +7,42 @@ if "dom_content" not in st.session_state:
     st.session_state.dom_content = ""
 if "pars_description" not in st.session_state:
     st.session_state.pars_description = None
+if "urls" not in st.session_state:
+    st.session_state.urls = [""]  # Инициализируем с одним пустым URL
 
 st.title("AI")
 
-url = st.text_input("Источник данных url", key="url_input")
+# Добавляем кнопку "+" для добавления новых полей ввода URL
+col1, col2 = st.columns([10, 1])
+with col1:
+    # Динамически создаем поля ввода URL
+    for i in range(len(st.session_state.urls)):
+        st.session_state.urls[i] = st.text_input(
+            f"Источник данных url {i+1}", 
+            value=st.session_state.urls[i], 
+            key=f"url_input_{i}"
+        )
+
+with col2:
+    # Кнопка для добавления новых полей ввода
+    if st.button("➕", key="add_url"):
+        st.session_state.urls.append("")  # Добавляем новое пустое поле
 
 if st.button("Запуск"):
-    if url:
-        r = get_page_html(url=url)
-        r = extract_body_content(r)
-        r = clean_body_content(r)
-        st.session_state.dom_content = r
-        # Не сбрасываем pars_description при новом запуске, чтобы пользователь мог перезапустить и оставить уточнения
+    # Обработка всех непустых URL и объединение их содержимого
+    all_content = []
+    source_number = 1
+    for url in st.session_state.urls:
+        if url.strip():  # Проверяем, что URL не пустой
+            r = get_page_html(url=url)
+            r = extract_body_content(r)
+            r = clean_body_content(r)
+            # Добавляем разделение фрагментов с указанием источника
+            source_header = f"\n\n=== Источник {source_number} ===\n"
+            all_content.append(source_header + r)
+            source_number += 1
+    st.session_state.dom_content = "\n".join(all_content)
+    # Не сбрасываем pars_description при новом запуске, чтобы пользователь мог перезапустить и оставить уточнения
 
 if st.session_state.dom_content:
     with st.expander("Посмотреть данные из источников"):
