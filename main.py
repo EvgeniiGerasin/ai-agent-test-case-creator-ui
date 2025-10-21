@@ -10,23 +10,23 @@ if "pars_description" not in st.session_state:
 if "urls" not in st.session_state:
     st.session_state.urls = [""]  # Инициализируем с одним пустым URL
 
+
 st.title("AI")
 
-# Добавляем кнопку "+" для добавления новых полей ввода URL
-col1, col2 = st.columns([10, 1])
-with col1:
-    # Динамически создаем поля ввода URL
-    for i in range(len(st.session_state.urls)):
+# Отдельная кнопка для добавления новых полей ввода URL
+if st.button("➕ Добавить источник", key="add_url_main"):
+    st.session_state.urls.append("")  # Добавляем новое пустое поле
+
+# Добавляем поля ввода URL
+for i in range(len(st.session_state.urls)):
+    col1, col2 = st.columns([10, 1])
+    with col1:
         st.session_state.urls[i] = st.text_input(
             f"Источник данных url {i+1}", 
             value=st.session_state.urls[i], 
-            key=f"url_input_{i}"
+            key=f"url_input_{i}",
+            label_visibility="collapsed"  # Скрываем лейблы
         )
-
-with col2:
-    # Кнопка для добавления новых полей ввода
-    if st.button("➕", key="add_url"):
-        st.session_state.urls.append("")  # Добавляем новое пустое поле
 
 if st.button("Запуск"):
     # Обработка всех непустых URL и объединение их содержимого
