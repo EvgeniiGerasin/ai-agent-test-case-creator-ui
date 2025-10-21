@@ -11,10 +11,55 @@ if "urls" not in st.session_state:
     st.session_state.urls = [""]  # Инициализируем с одним пустым URL
 
 
-st.title("AI")
+# Добавляем CSS стили для адаптивного подстраивания страницы под контент
+st.markdown("""
+<style>
+    .stTextInput > label {
+        display: none;
+    }
+    
+    .add-url-button {
+        margin-top: 25px;
+    }
+    
+    /* Адаптивная высота для текстовой области результата */
+    .result-textarea {
+        width: 100% !important;
+        min-height: 300px;
+        max-height: 80vh;  /* Максимальная высота 80% от высоты экрана */
+        overflow-y: auto;  /* Вертикальный скролл, если контент превышает высоту */
+    }
+    
+    /* Обертка для адаптивности */
+    .main-container {
+        width: 100%;
+        max-width: 100%;
+        padding: 1rem;
+    }
+    
+    /* Адаптивность для текстовых полей */
+    .stTextArea textarea, .stTextInput input {
+        width: 100% !important;
+    }
+    
+    /* Адаптивность для колонок */
+    .stColumn {
+        flex: 1;
+    }
+    
+    /* Адаптивность для текста результата */
+    .result-content {
+        white-space: pre-wrap;  /* Сохраняем переносы строк */
+        word-wrap: break-word;  /* Переносим длинные строки */
+        overflow-wrap: break-word;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.title("Генератор проверок. Alpha0.1")
 
 # Отдельная кнопка для добавления новых полей ввода URL
-if st.button("➕ Добавить источник", key="add_url_main"):
+if st.button("➕ Добавить источник данных", key="add_url_main"):
     st.session_state.urls.append("")  # Добавляем новое пустое поле
 
 # Добавляем поля ввода URL
@@ -63,5 +108,9 @@ if st.session_state.dom_content:
             dom_content=st.session_state.dom_content, 
             user_request=st.session_state.pars_description
         )
-        st.write("Результат:")
-        st.text_area("Извлеченные данные", value=generated_result, height=400)
+        # st.write("Результат:")
+        # Адаптивная высота текстовой области в зависимости от размера контента
+        # content_lines = len(generated_result.split('\n'))
+        # calculated_height = min(max(300, content_lines * 20), 800)  # Высота от 300 до 800 пикселей
+        # Используем текстовую область для прокрутки при большом объеме данных
+        st.markdown(generated_result)
