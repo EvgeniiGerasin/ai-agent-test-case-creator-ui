@@ -1,0 +1,27 @@
+[project]
+name = "ai-test-case-creator-ui"
+version = "0.1.0"
+description = ""
+authors = [
+    {name = "e.d.gerasin",email = "e.d.gerasin@yandex.ru"}
+]
+readme = "README.md"
+requires-python = ">=3.13,<4.0.0"
+dependencies = [
+    "streamlit (>=1.50.0,<2.0.0)",
+    "langchain-community (>=0.3.31,<0.4.0)",
+    "langchain-openai (>=0.3.35,<0.4.0)",
+    "python-dotenv (>=1.1.1,<2.0.0)",
+    "pydantic (>=2.12.0,<3.0.0)",
+    "langchain (>=0.3.27,<0.4.0)",
+    "playwright (>=1.49.1,<2.0.0)",
+    "bs4 (>=0.0.2,<0.0.3)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+package-mode = false
