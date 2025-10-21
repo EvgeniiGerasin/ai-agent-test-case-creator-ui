@@ -39,7 +39,7 @@ st.markdown("""
     
     /* Адаптивность для текстовых полей */
     .stTextArea textarea, .stTextInput input {
-        width: 100% !important;
+        min-width: 1200px;
     }
     
     /* Адаптивность для колонок */
@@ -64,7 +64,7 @@ if st.button("➕ Добавить источник данных", key="add_url_
 
 # Добавляем поля ввода URL
 for i in range(len(st.session_state.urls)):
-    col1, col2 = st.columns([10, 1])
+    col1, col2 = st.columns([15, 1])  # Увеличиваем ширину поля ввода URL
     with col1:
         st.session_state.urls[i] = st.text_input(
             f"Источник данных url {i+1}", 
@@ -101,16 +101,26 @@ if st.session_state.dom_content:
     )
     st.session_state.pars_description = input_description
 
+    # Инициализация переменной для результата генерации
+    if "generated_result" not in st.session_state:
+        st.session_state.generated_result = None
+    
     if st.button("Сгенерировать"):
-        st.write("Генерация...")
+        # Показываем сообщение о генерации
+        generation_placeholder = st.empty()
+        with generation_placeholder:
+            st.write("Генерация...")
+        
         # Вызов LLM для извлечения релевантной информации с учетом уточнений пользователя
         generated_result = parse_content(
             dom_content=st.session_state.dom_content, 
             user_request=st.session_state.pars_description
         )
-        # st.write("Результат:")
-        # Адаптивная высота текстовой области в зависимости от размера контента
-        # content_lines = len(generated_result.split('\n'))
-        # calculated_height = min(max(300, content_lines * 20), 800)  # Высота от 300 до 800 пикселей
-        # Используем текстовую область для прокрутки при большом объеме данных
-        st.markdown(generated_result)
+        
+        # Сохраняем результат в session_state и удаляем сообщение о генерации
+        st.session_state.generated_result = generated_result
+        generation_placeholder.empty()
+    
+    # Отображаем результат, если он существует
+    if st.session_state.generated_result:
+        st.markdown(st.session_state.generated_result)
