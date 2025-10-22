@@ -14,39 +14,6 @@ if "urls" not in st.session_state:
 # Добавляем CSS стили для адаптивного подстраивания страницы под контент
 st.markdown("""
 <style>
-    .stTextInput > label {
-        display: none;
-    }
-    
-    .add-url-button {
-        margin-top: 25px;
-    }
-    
-    /* Адаптивная высота для текстовой области результата */
-    .result-textarea {
-        width: 100% !important;
-        min-height: 300px;
-        max-height: 80vh;  /* Максимальная высота 80% от высоты экрана */
-        overflow-y: auto;  /* Вертикальный скролл, если контент превышает высоту */
-    }
-    
-    /* Обертка для адаптивности */
-    .main-container {
-        width: 100%;
-        max-width: 100%;
-        padding: 1rem;
-    }
-    
-    /* Адаптивность для текстовых полей */
-    .stTextArea textarea, .stTextInput input {
-        min-width: 1200px;
-    }
-    
-    /* Адаптивность для колонок */
-    .stColumn {
-        flex: 1;
-    }
-    
     /* Адаптивность для текста результата */
     .result-content {
         white-space: pre-wrap;  /* Сохраняем переносы строк */
