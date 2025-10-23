@@ -6,7 +6,7 @@ from langchain_core.output_parsers import StrOutputParser
 
 load_dotenv()
 
-llm = ChatOpenAI(model="openai/gpt-oss-120b", base_url="https://integrate.api.nvidia.com/v1")
+llm = ChatOpenAI(model="openai/gpt-oss-20b", base_url="https://integrate.api.nvidia.com/v1")
 
 
 def parse_content(dom_content: str, user_request: str = None) -> str:
@@ -48,4 +48,21 @@ def parse_content(dom_content: str, user_request: str = None) -> str:
     # Invoke the chain to get the parsed content
     result = chain.invoke({"dom_content": dom_content})
     
+    return result
+
+def test_case_generator(dom_content: str, user_request: str = None) -> str:
+
+    base_prompt = """
+        Используй данные для генерации тест-кейсов: {dom_content}
+        """
+    if user_request and user_request.strip():
+        full_prompt = base_prompt + f"\n\nКроме того, пользователь уточнил, что ему нужно следующее: {user_request}\nУчитывай это уточнение при создании тест-кейсов."
+    else:
+        full_prompt = base_prompt
+    prompt = ChatPromptTemplate.from_messages([
+        ("system", "Ты специалист по тестированию программного обеспечивания, перед которым стоит задача по созданию текст-кейсов для проверки функционала"),
+        ("human", full_prompt)
+    ])
+    chain = prompt | llm | StrOutputParser()
+    result = chain.invoke({"dom_content": dom_content})
     return result
